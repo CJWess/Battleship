@@ -16,5 +16,14 @@ namespace Battleship
             X = x;
             Y = y;
         }
+
+        public override bool Equals(object obj)
+        {
+            Point other = obj as Point;
+
+            if (obj == null) return false;
+
+            return X == other.X && Y == other.Y;
+        }
     }
 }

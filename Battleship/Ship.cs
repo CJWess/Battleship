@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Battleship
 {
-    class Ship
+    public class Ship
     {
         public enum Orientation
         {
@@ -34,18 +34,33 @@ namespace Battleship
 
         public bool Overlaps(Ship other)
         {
-            if (this.startPoint == other.startPoint)
-            return true;
-
-
+            return ShipCoordinates().Any(x => other.ShipCoordinates().Contains(x));
         }
 
-        private List<Point> ShipCoordinates()
+    private List<Point> ShipCoordinates()
         {
+            List<Point> shipCoords = new List<Point>();
+            shipCoords.Add(startPoint);
             if (orientation == Orientation.Vertical)
             {
-                for (Point i = startPoint; i.Y < length; i.Y)
+
+                for (int i = startPoint.Y; i < length; i++)
+                {
+                    Point point = new Point(startPoint.X, i);
+                    shipCoords.Add(point);
+                }
             }
+
+            else if (orientation == Orientation.Horizontal)
+            {
+                for (int i = startPoint.X; i < length; i++)
+                {
+                    Point point = new Point(i, startPoint.Y);
+                    shipCoords.Add(point);
+                }
+
+            }
+            return shipCoords;
         }
     }
 }
