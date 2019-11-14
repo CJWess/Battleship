@@ -10,8 +10,8 @@ namespace Battleship
     {
         public enum Orientation
         {
-            Vertical,
-            Horizontal
+            Vertical = 0,
+            Horizontal = 1
         }
 
         // some point
@@ -37,7 +37,21 @@ namespace Battleship
             return ShipCoordinates().Any(x => other.ShipCoordinates().Contains(x));
         }
 
-    private List<Point> ShipCoordinates()
+        public bool InBounds(Board board)
+        {
+            bool inBounds = true;
+            foreach (Point point in ShipCoordinates())
+            {
+                if (point.X < 0 || point.X > board.Width || point.Y < 0 || point.Y > board.Height)
+                {
+                    inBounds = false;
+                    break;
+                }
+            }
+            return inBounds;
+        }
+
+        private List<Point> ShipCoordinates()
         {
             List<Point> shipCoords = new List<Point>();
             shipCoords.Add(startPoint);
@@ -61,6 +75,11 @@ namespace Battleship
 
             }
             return shipCoords;
+        }
+
+        public static Orientation RandomOrientation(Random random)
+        {
+            return (Orientation)random.Next(0, 1);
         }
     }
 }
