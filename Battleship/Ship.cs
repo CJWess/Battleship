@@ -42,7 +42,7 @@ namespace Battleship
             bool inBounds = true;
             foreach (Point point in ShipCoordinates())
             {
-                if (point.X < 0 || point.X > board.Width || point.Y < 0 || point.Y > board.Height)
+                if (point.X < 0 || point.X >= board.Width || point.Y < 0 || point.Y >= board.Height)
                 {
                     inBounds = false;
                     break;
@@ -51,14 +51,21 @@ namespace Battleship
             return inBounds;
         }
 
+        private List<Point> TestCoordinates
+        {
+            get
+            {
+                return ShipCoordinates();
+            }
+        }
+
         private List<Point> ShipCoordinates()
         {
             List<Point> shipCoords = new List<Point>();
-            shipCoords.Add(startPoint);
+
             if (orientation == Orientation.Vertical)
             {
-
-                for (int i = startPoint.Y; i < length; i++)
+                for (int i = startPoint.Y; i < startPoint.Y + length; i++)
                 {
                     Point point = new Point(startPoint.X, i);
                     shipCoords.Add(point);
@@ -67,19 +74,24 @@ namespace Battleship
 
             else if (orientation == Orientation.Horizontal)
             {
-                for (int i = startPoint.X; i < length; i++)
+                for (int i = startPoint.X; i < startPoint.X + length; i++)
                 {
                     Point point = new Point(i, startPoint.Y);
                     shipCoords.Add(point);
                 }
-
             }
+
             return shipCoords;
+        }
+
+        public bool CoordOverlap(Point point)
+        {
+            return ShipCoordinates().Contains(point);
         }
 
         public static Orientation RandomOrientation(Random random)
         {
-            return (Orientation)random.Next(0, 1);
+            return (Orientation)random.Next(0, 2);
         }
     }
 }

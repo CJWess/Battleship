@@ -25,27 +25,12 @@ namespace Battleship
         private void InitShips(int[] shipLengths)
         {
             ships = new List<Ship>();
-            var orientationList = new List<Ship.Orientation> { Ship.Orientation.Horizontal, Ship.Orientation.Vertical };
            
-            for (int i = 0; i > shipLengths.Count(); i++)
+            for (int i = 0; i < shipLengths.Count(); i++)
             {
                 Ship ship = new Ship(shipLengths[i]);
-                // try to place ship
-                int countDown = 3000;
-                ship.SetPosition(RandomPoint(), Ship.RandomOrientation(random));
 
-                foreach (Ship shipInList in ships)
-                {
-                    while (ship.Overlaps(shipInList) || countDown != 0 || ship.InBounds(this))
-                    {
-                        ship.SetPosition(RandomPoint(), Ship.RandomOrientation(random));
-                        countDown--;
-                    }
-                }
-                if (countDown != 0)
-                {
-                    ships.Add(ship);
-                }
+                PlaceShip(ship);
             }
 
             //generate random start point ♥♦♣♠
@@ -65,12 +50,69 @@ namespace Battleship
                 //shoots randomly without repeating
                 //if it hits, shoots in a random direction from that point until it hits again or sinks ship then resets
 
+            // CH - To all of the above: yes, at some point
+            // TODO:
+            // 1. Test Ship.InBounds(Board) ♥♦♣♠
+            // 2. Draw board to console (for debugging include an option to draw ships) ♥♦
+            // 3. Allow user to take shots
+        }
 
+        public bool ContainsAllShips()
+        {
+            return !ships.Any(x => !x.InBounds(this));
         }
 
         private Point RandomPoint()
         {
             return new Point(random.Next(0, Width), random.Next(0, Height));
+        }
+
+        // bug from before:
+        // we were breaking out of the inner loop used to check for overlap against other ships
+        // but not out of the outer loop that was running the placing logic for x attempts
+        // which was causing the ship to be moved once it had been placed, dodging our in bounds check
+        // lesson learned: the overlaps against any other ship check should have been contained in a different function
+        // (or use a more concise method to check overlaps)
+        private void PlaceShip(Ship ship)
+        {
+            int limit = 1000000;
+
+            for (int i = 0; i < limit; i++)
+            {
+                ship.SetPosition(RandomPoint(), Ship.RandomOrientation(random));
+
+                bool inBounds = ship.InBounds(this);
+                bool overlapsOther = ships.Any(x => x.Overlaps(ship));
+
+                if (inBounds && !overlapsOther)
+                {
+                    ships.Add(ship);
+                    break;
+                }
+            }
+        }
+
+        public static void PrintBoard(Board board)
+        {
+            Console.WriteLine();
+            for (int y = 0; y < board.Height; y++)
+            {
+                for (int x = 0; x < board.Width; x++)
+                {
+                    bool isOverlap = false;
+                    foreach (Ship ship in board.ships)
+                    {
+                        if (ship.CoordOverlap(new Point(x, y)))
+                        {
+                            isOverlap = true;
+                        }
+                    }
+
+                    Console.Write(isOverlap ? "[O]" : "[ ]");
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();
         }
     }
 }

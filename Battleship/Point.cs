@@ -25,5 +25,18 @@ namespace Battleship
 
             return X == other.X && Y == other.Y;
         }
+
+        public override int GetHashCode()
+        {
+            int hash = 13;
+            hash = (hash * 7) + X.GetHashCode();
+            hash = (hash * 7) + Y.GetHashCode();
+            return hash;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("({0}, {1})", X, Y);
+        }
     }
 }

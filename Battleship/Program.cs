@@ -18,6 +18,8 @@ namespace Battleship
         //
         static void Main(string[] args)
         {
+            Board boardTest = new Board(5, 5, 3, 4, 1);
+            
             char[,] gameBoard = new char[5, 5]
             {
                 {' ', 'O', 'O', ' ', 'O'},
@@ -36,13 +38,15 @@ namespace Battleship
                 {' ', ' ', ' ', ' ', ' '}
             };
 
-            GameStart(gameBoard);
+            GameStart(gameBoard, boardTest);
             
             
          
         }
-        static void GameStart(char[,] board)
+        static void GameStart(char[,] board, Board boardTest)
         {
+            
+            Board.PrintBoard(boardTest);
             Point point = new Point(1, 2);
             for (int i = 0; i < 20; i++)
             {
