@@ -89,6 +89,11 @@ namespace Battleship
             return ShipCoordinates().Contains(point);
         }
 
+        public bool IsSunk(List<Point> shotsTaken)
+        {
+            return !ShipCoordinates().Except(shotsTaken).Any();
+        }
+
         public static Orientation RandomOrientation(Random random)
         {
             return (Orientation)random.Next(0, 2);

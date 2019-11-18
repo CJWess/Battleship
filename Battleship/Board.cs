@@ -12,12 +12,16 @@ namespace Battleship
         public int Height { get; }
 
         private List<Ship> ships;
+
+        private List<Point> shotsTaken;
+
         private Random random;
         public Board(int width, int height, params int[] shipLengths)
         {
             random = new Random();
             Width = width;
             Height = height;
+            shotsTaken = new List<Point>();
             InitShips(shipLengths);
         }
 
@@ -52,7 +56,7 @@ namespace Battleship
 
             // CH - To all of the above: yes, at some point
             // TODO:
-            // 1. Test Ship.InBounds(Board) ♥♦♣♠
+            // 1. Test Ship.InBounds(Board) ♥♦♣♠ // CH - Try to use more robust tests. The only position you're testing is (0,0)
             // 2. Draw board to console (for debugging include an option to draw ships) ♥♦
             // 3. Allow user to take shots
         }
@@ -92,15 +96,15 @@ namespace Battleship
             }
         }
 
-        public static void PrintBoard(Board board)
+        public void PrintBoard()
         {
             Console.WriteLine();
-            for (int y = 0; y < board.Height; y++)
+            for (int y = 0; y < Height; y++)
             {
-                for (int x = 0; x < board.Width; x++)
+                for (int x = 0; x < Width; x++)
                 {
                     bool isOverlap = false;
-                    foreach (Ship ship in board.ships)
+                    foreach (Ship ship in ships)
                     {
                         if (ship.CoordOverlap(new Point(x, y)))
                         {
@@ -113,6 +117,57 @@ namespace Battleship
                 Console.WriteLine();
             }
             Console.WriteLine();
+        }
+
+        public void TakeShot(Point shot)
+        {
+            bool isSunk = false;
+
+            if(!shotsTaken.Contains(shot))
+            {
+                shotsTaken.Add(shot);
+            }
+
+            foreach (Ship ship in ships)
+            {
+                bool hit = false;
+                if (ship.CoordOverlap(shot))
+                {
+                    hit = true;
+                }
+                else
+                {
+                    hit = false;
+                }
+
+                if (ship.IsSunk(shotsTaken))
+                {
+                    isSunk = true;
+                }
+
+            }
+
+
+            // check if shot hits ship
+            // if ship is hit, check if ship sinks and/or all ships have sunk
+                //-for each ship in ships, check if shotsTaken contains every point making up ship
+
+
+            // will need to store data for the shot 
+        }
+        public bool IsGameOver()
+        {
+            bool gameOver = false;
+            foreach(Ship ship in ships)
+            {
+                if (!ship.IsSunk(shotsTaken))
+                {
+                    gameOver = false;
+                    break;
+                }
+
+
+            }
         }
     }
 }
