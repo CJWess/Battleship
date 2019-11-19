@@ -103,48 +103,41 @@ namespace Battleship
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    bool isOverlap = false;
-                    foreach (Ship ship in ships)
-                    {
-                        if (ship.CoordOverlap(new Point(x, y)))
-                        {
-                            isOverlap = true;
-                        }
-                    }
+                    Point point = new Point(x, y);
+                    bool shipAtPoint = ships.Any(ship => ship.CoordOverlap(point));
+                    bool shotTakenAtPoint = shotsTaken.Any(shot => shot.Equals(new Point(x, y)));
 
-                    Console.Write(isOverlap ? "[O]" : "[ ]");
+                    if (shotTakenAtPoint)
+                    {
+                        if (shipAtPoint) Console.Write("[X]");
+                        else Console.Write("[-]");
+                    }
+                    else
+                    {
+                        Console.Write(shipAtPoint ? "[O]" : "[ ]");
+                    }
                 }
                 Console.WriteLine();
             }
             Console.WriteLine();
         }
 
-        public void TakeShot(Point shot)
+        public void TakeShot(Point shot, out string shipStatus)
         {
-            bool isSunk = false;
-
-            if(!shotsTaken.Contains(shot))
+            shipStatus = "Miss.";
+            if (!shotsTaken.Contains(shot))
             {
                 shotsTaken.Add(shot);
-            }
+                Ship shipHit = ships.Find(x => x.CoordOverlap(shot));
 
-            foreach (Ship ship in ships)
-            {
-                bool hit = false;
-                if (ship.CoordOverlap(shot))
+                if (shipHit != null)
                 {
-                    hit = true;
+                    shipStatus = "Hit";
+                    if (shipHit.IsSunk(shotsTaken))
+                    {
+                        shipStatus += " and ship sunk";
+                    }
                 }
-                else
-                {
-                    hit = false;
-                }
-
-                if (ship.IsSunk(shotsTaken))
-                {
-                    isSunk = true;
-                }
-
             }
 
 
@@ -155,19 +148,19 @@ namespace Battleship
 
             // will need to store data for the shot 
         }
+
+        //private Ship ShipSunkByShot(Point shot)
+        //{
+        //    List<Ship> sunkenShipsAfterShot = ships.Where(x => x.IsSunk(shotsTaken)).ToList();
+        //    List<Point> shotsBeforeShot = shotsTaken.Where(x => !x.Equals(shot)).ToList();
+        //    List<Ship> alreadySunkenShips = ships.Where(x => x.IsSunk(shotsTaken)).ToList();
+        //    Ship sunkenShip = sunkenShipsAfterShot.Except(alreadySunkenShips).FirstOrDefault();
+        //    return sunkenShip;
+        //}
+
         public bool IsGameOver()
         {
-            bool gameOver = false;
-            foreach(Ship ship in ships)
-            {
-                if (!ship.IsSunk(shotsTaken))
-                {
-                    gameOver = false;
-                    break;
-                }
-
-
-            }
+            return ships.All(x => x.IsSunk(shotsTaken));
         }
     }
 }

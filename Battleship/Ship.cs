@@ -51,13 +51,13 @@ namespace Battleship
             return inBounds;
         }
 
-        private List<Point> TestCoordinates
-        {
-            get
-            {
-                return ShipCoordinates();
-            }
-        }
+        //private List<Point> TestCoordinates
+        //{
+        //    get
+        //    {
+        //        return ShipCoordinates();
+        //    }
+        //}
 
         private List<Point> ShipCoordinates()
         {

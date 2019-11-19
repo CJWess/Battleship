@@ -17,7 +17,7 @@ namespace BattleshipTests
             mainShip.SetPosition(new Point(1, 4), Ship.Orientation.Vertical);
             otherShip.SetPosition(new Point(0, 2), Ship.Orientation.Horizontal);
 
-            Assert.IsTrue(!mainShip.Overlaps(otherShip));
+            Assert.IsFalse(mainShip.Overlaps(otherShip));
         }
 
         [TestMethod]

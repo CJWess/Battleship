@@ -18,62 +18,33 @@ namespace Battleship
         //
         static void Main(string[] args)
         {
-            Board boardTest = new Board(5, 5, 3, 4, 1);
-            
-            //char[,] gameBoard = new char[5, 5]
-            //{
-            //    {' ', 'O', 'O', ' ', 'O'},
-            //    {' ', ' ', ' ', ' ', 'O'},
-            //    {' ', ' ', ' ', 'O', 'O'},
-            //    {' ', ' ', ' ', 'O', 'O'},
-            //    {' ', ' ', ' ', 'O', ' '}
-            //};
+            Board gameBoard = new Board(5, 5, 3, 4, 1);
 
-            //char[,] firstShip = new char[5, 5]
-            //{
-            //    {' ', 'O', 'O', ' ', ' '},
-            //    {' ', ' ', ' ', ' ', ' '},
-            //    {' ', ' ', ' ', ' ', ' '},
-            //    {' ', ' ', ' ', ' ', ' '},
-            //    {' ', ' ', ' ', ' ', ' '}
-            //};
+            GameStart(gameBoard);  
 
-            GameStart(boardTest);
-            
-            
-         
         }
-        static void GameStart(Board boardTest)
+        static void GameStart(Board gameBoard)
         {
             
-            Board.PrintBoard(boardTest);
-            Point point = new Point(1, 2);
+            gameBoard.PrintBoard();
             for (int i = 0; i < 30; i++)
             {
-                Console.WriteLine("Take the shot, Captain. " +
-                    "(Enter an X coordinate 1-5)");
-                int xInput = Int32.Parse(Console.ReadLine());
-                Console.WriteLine("(Enter a Y coordinate 1-5)");
-                int yInput = Int32.Parse(Console.ReadLine());
+                Console.WriteLine("Take the shot, Captain. " + "(Enter an X coordinate)");
+                string input = Console.ReadLine();
+                int xInput = int.Parse(Console.ReadLine());
 
-                if (boardTest[xInput - 1, yInput - 1] == 'O')
+                Console.WriteLine("(Enter a Y coordinate)");
+                int yInput = int.Parse(Console.ReadLine());
+
+                gameBoard.TakeShot(new Point(xInput, yInput), out string shipStatus);
+                Console.WriteLine(shipStatus);
+                gameBoard.PrintBoard();
+                if (gameBoard.IsGameOver())
                 {
-                    Console.WriteLine("Hit!");
-                    board[xInput - 1, yInput - 1] = 'X';
-                }
-
-                else
-                {
-                    Console.WriteLine("Miss");
-                }
-
-                Console.WriteLine("Number of shots left" + i);
-
-                if (IsGameOver(board))
-                {
-                    Console.WriteLine("Game Over");
+                    Console.WriteLine("Game Over!");
                     break;
                 }
+
             }
 
 
@@ -84,29 +55,5 @@ namespace Battleship
 
 
         }
-
-        static bool IsGameOver(Board board)
-        {
-            return board.ships
-
-
-        //    int hitsLeft = 0;
-        //    for (int j = 0; j < board.GetLength(0); j++)
-        //    {
-        //        for (int k = 0; k < board.GetLength(1); k++)
-        //        {
-        //            if (board[j, k] == 'O')
-        //            {
-        //                hitsLeft += 1;
-        //            }
-        //        }
-
-        //    }
-        //    if (hitsLeft == 0)
-        //    {
-        //        return true;
-        //    }
-        //    return false;
-        //}
     }
 }
