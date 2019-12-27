@@ -18,42 +18,39 @@ namespace Battleship
         //
         static void Main(string[] args)
         {
-            Board gameBoard = new Board(5, 5, 3, 4, 1);
+            Board playerBoard = new Board(5, 5, 3, 4, 1);
+            Board aiBoard = new Board(5, 5, 3, 4, 1);
 
-            GameStart(gameBoard);  
+            GameStart(playerBoard, aiBoard);  
 
         }
-        static void GameStart(Board gameBoard)
+        static void GameStart(Board playerBoard, Board aiBoard)
         {
             
-            gameBoard.PrintBoard();
-            for (int i = 0; i < 30; i++)
+            playerBoard.PrintBoard(true); //playerboard and aiboard
+            aiBoard.PrintBoard(false);
+            ;
+            for (int i = 0; i < 30; i++)//repeat the whole loop for ai shot
             {
-                Console.WriteLine("Take the shot, Captain. " + "(Enter an X coordinate)");
+                Console.WriteLine("Take the shot, Captain. (x y)");
                 string input = Console.ReadLine();
-                int xInput = int.Parse(Console.ReadLine());
 
-                Console.WriteLine("(Enter a Y coordinate)");
-                int yInput = int.Parse(Console.ReadLine());
+                int xInput = int.Parse(input.Split(' ')[0]);
+                int yInput = int.Parse(input.Split(' ')[1]);
 
-                gameBoard.TakeShot(new Point(xInput, yInput), out string shipStatus);
-                Console.WriteLine(shipStatus);
-                gameBoard.PrintBoard();
-                if (gameBoard.IsGameOver())
+                aiBoard.TakeShot(new Point(xInput, yInput), out string shipStatus); //takeshot on ai board
+                Console.WriteLine(shipStatus); //takeshot on playerboard
+                aiBoard.PrintBoard(false); // add argument that toggles display of ships
+                if (aiBoard.IsGameOver())//update so that game ends when one board reaches end state
                 {
                     Console.WriteLine("Game Over!");
                     break;
                 }
-
             }
-
 
             Console.WriteLine("Press any key to exit. . .");
 
             Console.ReadKey();
-
-
-
         }
     }
 }

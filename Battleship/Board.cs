@@ -96,7 +96,7 @@ namespace Battleship
             }
         }
 
-        public void PrintBoard()
+        public void PrintBoard(bool showShips)//pass in bool showships and display only playerboard ships "showShips"
         {
             Console.WriteLine();
             for (int y = 0; y < Height; y++)
@@ -114,7 +114,7 @@ namespace Battleship
                     }
                     else
                     {
-                        Console.Write(shipAtPoint ? "[O]" : "[ ]");
+                        Console.Write((shipAtPoint && showShips) ? "[O]" : "[ ]") ;
                     }
                 }
                 Console.WriteLine();
