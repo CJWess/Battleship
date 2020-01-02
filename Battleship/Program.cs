@@ -26,11 +26,13 @@ namespace Battleship
         }
         static void GameStart(Board playerBoard, Board aiBoard)
         {
-            
+            string lastShotStatus = "Miss.";
+            Point lastShot;
+            Random rnd = new Random();
             playerBoard.PrintBoard(true); //playerboard and aiboard
             aiBoard.PrintBoard(false);
-            ;
-            for (int i = 0; i < 30; i++)//repeat the whole loop for ai shot
+
+            for (int i = 0; i < 60; i++)
             {
                 Console.WriteLine("Take the shot, Captain. (x y)");
                 string input = Console.ReadLine();
@@ -38,10 +40,26 @@ namespace Battleship
                 int xInput = int.Parse(input.Split(' ')[0]);
                 int yInput = int.Parse(input.Split(' ')[1]);
 
-                aiBoard.TakeShot(new Point(xInput, yInput), out string shipStatus); //takeshot on ai board
-                Console.WriteLine(shipStatus); //takeshot on playerboard
+                aiBoard.TakeShot(new Point(xInput, yInput), out string aiShipStatus); //takeshot on ai board
+                Console.WriteLine(aiShipStatus);
+
+                if (lastShotStatus == "Hit")
+                {
+
+                }
+                else
+                {
+                    Point currentShot = new Point(rnd.Next(0, 5), rnd.Next(0, 5));
+                    playerBoard.TakeShot(currentShot, out string playerShipStatus); //takeshot on playerboard logic
+                    lastShotStatus = playerShipStatus;
+                    lastShot = currentShot;
+                    Console.WriteLine(playerShipStatus);
+                }
+
+
+
                 aiBoard.PrintBoard(false); // add argument that toggles display of ships
-                if (aiBoard.IsGameOver())//update so that game ends when one board reaches end state
+                if (aiBoard.IsGameOver() || playerBoard.IsGameOver())//update so that game ends when one board reaches end state
                 {
                     Console.WriteLine("Game Over!");
                     break;

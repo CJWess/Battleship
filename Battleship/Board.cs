@@ -122,9 +122,16 @@ namespace Battleship
             Console.WriteLine();
         }
 
-        public void TakeShot(Point shot, out string shipStatus)
+        public bool ShotAlreadyTakenAt(Point shot)
+        {
+           return shotsTaken.Contains(shot);
+        }
+
+        public bool TakeShot(Point shot, out string shipStatus)
         {
             shipStatus = "Miss.";
+            bool hit = false;
+
             if (!shotsTaken.Contains(shot))
             {
                 shotsTaken.Add(shot);
@@ -132,13 +139,16 @@ namespace Battleship
 
                 if (shipHit != null)
                 {
+                    hit = true;
                     shipStatus = "Hit";
                     if (shipHit.IsSunk(shotsTaken))
                     {
-                        shipStatus += " and ship sunk";
+                        shipStatus += " and ship sunk!";
                     }
                 }
             }
+
+            return hit;
 
 
             // check if shot hits ship
