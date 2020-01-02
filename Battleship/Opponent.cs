@@ -8,6 +8,12 @@ namespace Battleship
 {
     public class Opponent
     {
+        private enum ActionState
+        {
+            FindingShip,
+            FindingOrientation,
+            SinkingShip
+        }
         private Point lastShot;
         private bool lastShotStatus;
 
