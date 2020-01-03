@@ -18,6 +18,7 @@ namespace Battleship
         //
         static void Main(string[] args)
         {
+            Player player = new Player();
             Board playerBoard = new Board(5, 5, 3, 4, 1);
             Board aiBoard = new Board(5, 5, 3, 4, 1);
 
@@ -34,14 +35,7 @@ namespace Battleship
 
             for (int i = 0; i < 60; i++)
             {
-                Console.WriteLine("Take the shot, Captain. (x y)");
-                string input = Console.ReadLine();
 
-                int xInput = int.Parse(input.Split(' ')[0]);
-                int yInput = int.Parse(input.Split(' ')[1]);
-
-                aiBoard.TakeShot(new Point(xInput, yInput), out string aiShipStatus); //takeshot on ai board
-                Console.WriteLine(aiShipStatus);
 
                 if (lastShotStatus == "Hit")
                 {
