@@ -172,5 +172,10 @@ namespace Battleship
         {
             return ships.All(x => x.IsSunk(shotsTaken));
         }
+
+        public bool InBounds(Point point)
+        {
+            return point.X < Width && point.X >= 0 && point.Y >= 0 && point.Y < Height;
+        }
     }
 }
