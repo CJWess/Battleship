@@ -21,7 +21,7 @@ namespace Battleship
         Horizontal
         }
 
-        private Point lastShot;
+        private Point nextShot;
         private Point initialHit;
         private Point secondHit;
         private ActionState actionState;
@@ -104,7 +104,7 @@ namespace Battleship
         {
             if(shotResult == Board.ShotResult.HitWithoutSink)
             {
-                lastShot = shot;
+                //lastShot = shot;
                 initialHit = shot;
                 actionState = ActionState.FindingOrientation;
             }
@@ -115,7 +115,7 @@ namespace Battleship
         {
             if(shotResult == Board.ShotResult.HitWithoutSink)
             {
-                lastShot = shot;
+                //lastShot = shot;
                 secondHit = shot;
                 actionState = ActionState.SinkingShip;
 
@@ -138,7 +138,7 @@ namespace Battleship
         {
             if (shotResult == Board.ShotResult.HitWithoutSink)
             {
-                lastShot = shot;
+                //lastShot = shot;
             }
             else if (shotResult == Board.ShotResult.Miss)
             {
@@ -195,11 +195,19 @@ namespace Battleship
             return directionPoints[index];
         }
 
-        private Point GetShotForSinkingShip(Board board, Point originalHit, Point lastShot)
+        private Point GetShotForSinkingShip(Board board, Point originalHit, Point nextShot, Point secondHit)
         {
-            //if lastShot was going up from originalHit, shoot up again until miss or ship is sunk
+            //if(direction == Direction.Vertical)
+            //{
+            //    if(originalHit.X - secondHit.X < 0 )
+            //    nextShot = new Point()
+            //}
+            //if secondHit was going up from originalHit, shoot up again until miss or ship is sunk
             //if miss and ship not sunk, go down from original point
             //repeat for each direction
+
+            //stretch - prioritize empty spaces between stray hits on board
+            
             return null;
         }
 
