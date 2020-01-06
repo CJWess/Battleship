@@ -8,6 +8,13 @@ namespace Battleship
 {
     public class Board
     {
+        public enum ShotResult
+        {
+            Miss,
+            HitWithoutSink,
+            HitAndSink
+        }
+
         public int Width { get; }
         public int Height { get; }
 
@@ -127,10 +134,9 @@ namespace Battleship
            return shotsTaken.Contains(shot);
         }
 
-        public bool TakeShot(Point shot, out string shipStatus)
+        public ShotResult TakeShot(Point shot)
         {
-            shipStatus = "Miss.";
-            bool hit = false;
+            ShotResult result = ShotResult.Miss;
 
             if (!shotsTaken.Contains(shot))
             {
@@ -139,16 +145,15 @@ namespace Battleship
 
                 if (shipHit != null)
                 {
-                    hit = true;
-                    shipStatus = "Hit";
+                    result = ShotResult.HitWithoutSink;
                     if (shipHit.IsSunk(shotsTaken))
                     {
-                        shipStatus += " and ship sunk!";
+                        result = ShotResult.HitAndSink;
                     }
                 }
             }
 
-            return hit;
+            return result;
 
 
             // check if shot hits ship

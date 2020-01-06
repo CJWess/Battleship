@@ -12,11 +12,20 @@ namespace Battleship
         {
             FindingShip,
             FindingOrientation,
-            SinkingShip
+            SinkingShip,
         }
+
+        private enum Direction
+        {
+        Vertical,
+        Horizontal
+        }
+
         private Point lastShot;
-        private bool lastShotStatus;
+        private Point initialHit;
+        private Point secondHit;
         private ActionState actionState;
+        private Direction direction;
         private readonly Random random;
 
         public Opponent()
@@ -44,15 +53,16 @@ namespace Battleship
             }
 
 
-            bool hit = board.TakeShot(shot, out string shipStatus);
+            Board.ShotResult shotResult = board.TakeShot(shot);
 
             switch (actionState)
             {
                 case ActionState.FindingShip:
-                    AfterShotForFindingShip(shot, true, true);
+                    AfterShotForFindingShip(shot, shotResult);
                     break;
 
                 case ActionState.FindingOrientation:
+                    AfterShotForFindingOrientation(shot, shotResult);
                     break;
 
                 case ActionState.SinkingShip:
@@ -90,11 +100,56 @@ namespace Battleship
 
         }
 
-        private void AfterShotForFindingShip(Point shot, bool hit, bool sink)
+        private void AfterShotForFindingShip(Point shot, Board.ShotResult shotResult)
         {
-            if(hit && !sink)
+            if(shotResult == Board.ShotResult.HitWithoutSink)
             {
                 lastShot = shot;
+                initialHit = shot;
+                actionState = ActionState.FindingOrientation;
+            }
+
+        }
+
+        private void AfterShotForFindingOrientation(Point shot, Board.ShotResult shotResult)
+        {
+            if(shotResult == Board.ShotResult.HitWithoutSink)
+            {
+                lastShot = shot;
+                secondHit = shot;
+                actionState = ActionState.SinkingShip;
+
+                if(initialHit.X == secondHit.X)
+                {
+                    direction = Direction.Vertical;
+                }
+                else if(initialHit.Y == secondHit.Y)
+                {
+                    direction = Direction.Horizontal;
+                }
+            }
+            else if(shotResult == Board.ShotResult.HitAndSink)
+            {
+                actionState = ActionState.FindingShip;
+            }
+        }
+
+        private void AfterShotForSinkingShip(Point shot, Board.ShotResult shotResult)
+        {
+            if (shotResult == Board.ShotResult.HitWithoutSink)
+            {
+                lastShot = shot;
+            }
+            else if (shotResult == Board.ShotResult.Miss)
+            {
+                if(direction == Direction.Vertical)
+                {
+                    shot = new Point(initialHit.X, (initialHit.Y - secondHit.Y));
+                }
+            }
+            else if (shotResult == Board.ShotResult.HitAndSink)
+            {
+                actionState = ActionState.FindingOrientation;
             }
         }
 
